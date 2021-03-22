@@ -17,7 +17,7 @@ For each version of a library (mutable and immutable) you should implement the f
 - Find element by specific predicate (lst.find(is_even), find(lst, is_even))
 - Filter data structure by specific predicate (lst.filter(is_even), filter(lst, is_even))
 - Map (link) structure by specific function (lst.map(increment), map(lst, increment))
-- Reduce (link)– process structure elements to build a return value by specific functions (lst.reduce(sum),reduce(lst, sum))
+- Reduce (link) - process structure elements to build a return value by specific functions (lst.reduce(sum),reduce(lst, sum))
 - Data structure should be an iterator
 - Data structure should be a monoid and implement mempty and mconcat.
 
