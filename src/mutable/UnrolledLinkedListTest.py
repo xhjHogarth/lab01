@@ -50,7 +50,7 @@ class MyTestCase(unittest.TestCase):
 
         lst = UnrolledLinkedList(5)
         lst.from_list([1, 2, 3])
-        lst.map(lambda x: x+1)
+        lst.map(lambda x: x + 1)
         self.assertEqual(lst.to_list(), [2, 3, 4])
 
     def test_reduce(self):
@@ -63,7 +63,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(lst.reduce(lambda state, e: state + e, 0), 10)
 
     def test_get(self):
-        self.assertRaises(IndexError, lambda :UnrolledLinkedList(5).add(1).get(1))
+        self.assertRaises(IndexError, lambda: UnrolledLinkedList(5).add(1).get(1))
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).get(2), 3)
 
     def test_iter(self):
@@ -83,6 +83,25 @@ class MyTestCase(unittest.TestCase):
         lst3 = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5).add(6).add(7)
         self.assertEqual(lst1.to_list(), lst3.to_list())
 
+    def test_find(self):
+        lst = UnrolledLinkedList(5)
+        self.assertEqual(lst.find(2), False)
+        lst = UnrolledLinkedList(5).add(1).add(2).add(3)
+        self.assertEqual(lst.find(2), True)
+        self.assertEqual(lst.find(4), False)
+
+    def test_set(self):
+        lst = UnrolledLinkedList(5)
+        self.assertRaises(IndexError, lambda: lst.set(0, 1))
+        lst.add(1).add(2).add(3).add(4)
+        self.assertEqual(lst.set(1, 5).to_list(), [1, 5, 3, 4])
+
+    def test_filter(self):
+        lst = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5)
+
+        def is_even(n):
+            return n % 2 == 0
+        self.assertEqual(lst.filter(is_even).to_list(), [2, 4])
 
 if __name__ == '__main__':
     unittest.main()

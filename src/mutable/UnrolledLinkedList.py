@@ -39,6 +39,20 @@ class UnrolledLinkedList:
         else:
             raise IndexError
 
+    def set(self, index, value):
+        if 0 <= index < self.total_size:
+            i = 0
+            node = self.head
+            while i <= index:
+                for ele in node.elements[0:node.node_size]:
+                    if i == index:
+                        node.elements[i] = value
+                    i += 1
+                node = node.next
+            return self
+        else:
+            raise IndexError
+
     def size(self):
         return self.total_size
 
@@ -104,6 +118,16 @@ class UnrolledLinkedList:
             node = node.next
         return state
 
+    def find(self, value):
+        return value in self
+
+    def filter(self, f):
+        event_list = filter(f, self.to_list())
+        event_list = list(event_list)
+        for ele in self.to_list():
+            self.remove(ele)
+        return self.from_list(event_list)
+
     def _remove_from_node(self, node, index):
         if node.node_size == 1:
             if node.previous is not None:
@@ -154,8 +178,3 @@ class UnrolledLinkedList:
         node.elements[position] = element
         node.node_size += 1
         self.total_size += 1
-
-
-
-
-
