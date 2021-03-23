@@ -103,5 +103,6 @@ class MyTestCase(unittest.TestCase):
             return n % 2 == 0
         self.assertEqual(lst.filter(is_even).to_list(), [2, 4])
 
+
 if __name__ == '__main__':
     unittest.main()
