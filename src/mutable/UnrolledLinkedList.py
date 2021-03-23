@@ -88,8 +88,12 @@ class UnrolledLinkedList:
 
     def reverse(self):
         lst = self.to_list()
-        for ele in lst:
-            self.remove(ele)
+        # This operation will take more time, when the linked list is very long
+        # for ele in lst:
+        #     self.remove(ele)
+        self.total_size = 0
+        self.head = Node(self.nodeCapacity)
+        self.tail = self.head
         lst.reverse()
         return self.from_list(lst)
 
@@ -122,10 +126,15 @@ class UnrolledLinkedList:
         return value in self
 
     def filter(self, f):
-        event_list = filter(f, self.to_list())
-        event_list = list(event_list)
-        for ele in self.to_list():
-            self.remove(ele)
+        event_list = list(filter(f, self.to_list()))
+
+        # This operation will take more time, when the linked list is very long
+        # for ele in self.to_list():
+        #     self.remove(ele)
+
+        self.total_size = 0
+        self.head = Node(self.nodeCapacity)
+        self.tail = self.head
         return self.from_list(event_list)
 
     def _remove_from_node(self, node, index):
