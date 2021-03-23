@@ -38,6 +38,51 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3)
                          .reverse().to_list(), [3, 2, 1])
 
+    def test_map(self):
+        lst = UnrolledLinkedList(5)
+        lst.map(str)
+        self.assertEqual(lst.to_list(), [])
+
+        lst = UnrolledLinkedList(5)
+        lst.from_list([1, 2, 3])
+        lst.map(str)
+        self.assertEqual(lst.to_list(), ['1', '2', '3'])
+
+        lst = UnrolledLinkedList(5)
+        lst.from_list([1, 2, 3])
+        lst.map(lambda x: x+1)
+        self.assertEqual(lst.to_list(), [2, 3, 4])
+
+    def test_reduce(self):
+        lst = UnrolledLinkedList(5)
+        self.assertEqual(lst.reduce(lambda state, e: state + e, 0), 0)
+        self.assertEqual(lst.reduce(lambda state, e: state + e, 1), 1)
+
+        lst = UnrolledLinkedList(5)
+        lst.from_list([1, 2, 3, 4])
+        self.assertEqual(lst.reduce(lambda state, e: state + e, 0), 10)
+
+    def test_get(self):
+        self.assertRaises(IndexError, lambda :UnrolledLinkedList(5).add(1).get(1))
+        self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).get(2), 3)
+
+    def test_iter(self):
+        lst = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5).add(6).add(7)
+        lst2 = []
+        for n in lst:
+            try:
+                lst2.append(n)
+            except StopIteration:
+                pass
+        self.assertEqual(lst2, [1, 2, 3, 4, 5, 6, 7])
+
+    def test_mconcat(self):
+        lst1 = UnrolledLinkedList(5).add(1).add(2).add(3)
+        lst2 = UnrolledLinkedList(5).add(4).add(5).add(6).add(7)
+        lst1.mconcat(lst2)
+        lst3 = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5).add(6).add(7)
+        self.assertEqual(lst1.to_list(), lst3.to_list())
+
 
 if __name__ == '__main__':
     unittest.main()

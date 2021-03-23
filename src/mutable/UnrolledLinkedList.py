@@ -15,6 +15,30 @@ class UnrolledLinkedList:
         self.head = node
         self.tail = self.head
 
+    def __iter__(self):
+        self.count = 0
+        return self
+
+    def __next__(self):
+        while self.count < self.total_size:
+            value = self.get(self.count)
+            self.count += 1
+            return value
+        raise StopIteration
+
+    def get(self, index):
+        if 0 <= index < self.total_size:
+            i = 0
+            node = self.head
+            while i <= index:
+                for ele in node.elements[0:node.node_size]:
+                    if i == index:
+                        return ele
+                    i += 1
+                node = node.next
+        else:
+            raise IndexError
+
     def size(self):
         return self.total_size
 
@@ -54,6 +78,31 @@ class UnrolledLinkedList:
             self.remove(ele)
         lst.reverse()
         return self.from_list(lst)
+
+    def mconcat(self, lst):
+        node = lst.head
+        if lst is not None:
+            for i in range(0, node.node_size):
+                self.add(node.elements[i])
+            node = node.next
+        return self
+
+    def map(self, f):
+        node = self.head
+        while node is not None:
+            for i in range(0, node.node_size):
+                node.elements[i] = f(node.elements[i])
+            node = node.next
+        return self
+
+    def reduce(self, f, initial_state):
+        state = initial_state
+        node = self.head
+        while node is not None:
+            for i in range(0, node.node_size):
+                state = f(state, node.elements[i])
+            node = node.next
+        return state
 
     def _remove_from_node(self, node, index):
         if node.node_size == 1:
