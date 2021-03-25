@@ -103,6 +103,19 @@ class MyTestCase(unittest.TestCase):
             return n % 2 == 0
         self.assertEqual(lst.filter(is_even).to_list(), [2, 4])
 
+    @given(st.lists(st.integers()))
+    def test_from_list_to_list_equality(self, a):
+        lst = UnrolledLinkedList(5)
+        lst.from_list(a)
+        b = lst.to_list()
+        self.assertEqual(a, b)
+
+    @given(st.lists(st.integers()))
+    def test_python_len_and_list_size_equality(self, a):
+        lst = UnrolledLinkedList(5)
+        lst.from_list(a)
+        self.assertEqual(lst.size(), len(a))
+
 
 if __name__ == '__main__':
     unittest.main()

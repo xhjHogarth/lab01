@@ -123,9 +123,12 @@ def to_list(node):
 
 def from_list(lst):
     node = Node(5)
+    self = node
     for item in lst:
+        if node.next is not None:
+            node = node.next
         cons(node, item)
-    return node
+    return self
 
 
 def reverse(node):
@@ -135,11 +138,10 @@ def reverse(node):
 
 
 def mconcat(a, b):
-    res = None
     if a is None:
-        res = b
+        return b
     if b is None:
-        res = a
+        return a
 
     res = a
     tail = a

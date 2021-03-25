@@ -99,6 +99,16 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(filter(cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6), lambda x: is_even(x)),
                          cons(cons(cons(None, 2), 4), 6))
 
+    @given(st.lists(st.integers()))
+    def test_from_list_to_list_equality(self, a):
+        self.assertEqual(to_list(from_list(a)), a)
+
+    @given(st.lists(st.integers()))
+    def test_monoid_identity(self, lst):
+        a = from_list(lst)
+        self.assertEqual(mconcat(mempty(), a), a)
+        self.assertEqual(mconcat(a, mempty()), a)
+
 
 if __name__ == '__main__':
     unittest.main()
