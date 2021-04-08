@@ -65,23 +65,26 @@ def cons(node, value):
         node.elements[0] = value
         node.node_size = 1
     else:
-        if node.node_size == node.capacity:
-            new_node = Node(node.capacity)
-            element_to_move = node.node_size // 2
-            start_index = node.capacity - element_to_move
+        tmp = node
+        while tmp.next is not None:
+            tmp = tmp.next
+        if tmp.node_size == tmp.capacity:
+            new_node = Node(tmp.capacity)
+            element_to_move = tmp.node_size // 2
+            start_index = tmp.capacity - element_to_move
             i = 0
-            for ele in node.elements[start_index:]:
+            for ele in tmp.elements[start_index:]:
                 new_node.elements[i] = ele
-                node.elements[start_index + i] = None
+                tmp.elements[start_index + i] = None
                 i += 1
             new_node.elements[element_to_move] = value
-            node.node_size -= element_to_move
+            tmp.node_size -= element_to_move
             new_node.node_size = element_to_move + 1
-            node.next = new_node
-            new_node.previous = node
+            tmp.next = new_node
+            new_node.previous = tmp
         else:
-            node.elements[node.node_size] = value
-            node.node_size += 1
+            tmp.elements[tmp.node_size] = value
+            tmp.node_size += 1
     return node
 
 
@@ -89,10 +92,13 @@ def remove(node, index):
     self = node
     total_size = size(node)
     if 0 <= index < total_size:
-        i = 0
-        while i <= index:
+        tag = 0
+        while tag <= index:
+            while node.node_size+tag-1 < index:
+                tag += node.node_size
+                node = node.next
             for i in range(0, node.node_size):
-                if i == index:
+                if tag == index:
                     if node.node_size == 1:
                         if node.previous is not None:
                             node.previous.next = node.next
@@ -106,8 +112,7 @@ def remove(node, index):
                         for j in range(i, node.node_size-1):
                             node.elements[j] = node.elements[j + 1]
                         node.node_size -= 1
-                i += 1
-            node = node.next
+                tag += 1
         return self
     else:
         raise IndexError

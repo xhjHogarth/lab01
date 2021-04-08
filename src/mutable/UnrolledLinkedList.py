@@ -76,6 +76,7 @@ class UnrolledLinkedList:
         return self
 
     def remove(self, value):
+        """if value is not exist, will raise ValueError"""
         node = self.head
         while node is not None:
             index = 0
@@ -84,6 +85,8 @@ class UnrolledLinkedList:
                     self._remove_from_node(node, index)
                 index += 1
             node = node.next
+        if index == self.size():
+            raise ValueError
         return self
 
     def reverse(self):
@@ -98,8 +101,10 @@ class UnrolledLinkedList:
         return self.from_list(lst)
 
     def mconcat(self, lst):
+        if lst is None:
+            return self
         node = lst.head
-        if lst is not None:
+        while node is not None:
             for i in range(0, node.node_size):
                 self.add(node.elements[i])
             node = node.next

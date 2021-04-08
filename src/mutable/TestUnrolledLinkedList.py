@@ -6,16 +6,35 @@ import hypothesis.strategies as st
 from mutable.UnrolledLinkedList import *
 
 
-class MyTestCase(unittest.TestCase):
+class TestUnrolledLinkedList(unittest.TestCase):
     def test_size(self):
         self.assertEqual(UnrolledLinkedList(5).size(), 0)
         self.assertEqual(UnrolledLinkedList(5).add(1).size(), 1)
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).add(4)
                          .add(5).add(6).add(7).size(), 7)
 
+    def test_add(self):
+        self.assertEqual(UnrolledLinkedList(5).add(None).to_list(), [None])
+        self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(None).add("123").to_list(),
+                         [1, 2, 3, 4, None, "123"])
+
+    @given(st.lists(st.integers()))
+    def test_add2(self, a):
+        lst = UnrolledLinkedList(5)
+        for item in a:
+            lst.add(item)
+        self.assertEqual(lst.to_list(), a)
+
     def test_to_list(self):
         self.assertEqual(UnrolledLinkedList(5).to_list(), [])
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).to_list(), [1, 2, 3])
+
+    @given(st.lists(st.integers()))
+    def test_to_list2(self, a):
+        lst = UnrolledLinkedList(5)
+        for item in a:
+            lst.add(item)
+        self.assertEqual(lst.to_list(), a)
 
     def test_from_list(self):
         test_data = [
@@ -27,16 +46,30 @@ class MyTestCase(unittest.TestCase):
             lst = UnrolledLinkedList(5).from_list(e)
             self.assertEqual(lst.to_list(), e)
 
+    @given(st.lists(st.integers()))
+    def test_from_list2(self, a):
+        lst1 = UnrolledLinkedList(5)
+        lst2 = UnrolledLinkedList(5)
+        for item in a:
+            lst2.add(item)
+        self.assertEqual(lst1.from_list(a).to_list(), lst2.to_list())
+
     def test_remove(self):
-        self.assertEqual(UnrolledLinkedList(5).remove(1).to_list(), [])
+        # self.assertEqual(UnrolledLinkedList(5).remove(1).to_list(), [])
         self.assertEqual(UnrolledLinkedList(5).add(1).remove(1).to_list(), [])
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3).add(4)
                          .add(5).add(6).add(7).remove(6).to_list(), [1, 2, 3, 4, 5, 7])
+        self.assertRaises(ValueError, lambda: UnrolledLinkedList(5).add(1).add(2).add(3).add(4).remove(5))
 
     def test_reverse(self):
         self.assertEqual(UnrolledLinkedList(5).reverse().to_list(), [])
         self.assertEqual(UnrolledLinkedList(5).add(1).add(2).add(3)
                          .reverse().to_list(), [3, 2, 1])
+
+    @given(st.lists(st.integers()))
+    def test_reverse2(self, a):
+        x = UnrolledLinkedList(5).from_list(a).reverse()
+        self.assertEqual(x.to_list(), a[::-1])
 
     def test_map(self):
         lst = UnrolledLinkedList(5)
@@ -83,6 +116,13 @@ class MyTestCase(unittest.TestCase):
         lst3 = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5).add(6).add(7)
         self.assertEqual(lst1.to_list(), lst3.to_list())
 
+    @given(st.lists(st.integers()))
+    def test_monoid_identity(self, lst1):
+        a = UnrolledLinkedList(5).from_list(lst1)
+        b = UnrolledLinkedList(5).from_list([1, 2, 3, 4, 5, 0])
+        self.assertEqual(a.mconcat(None), a)
+        self.assertEqual(a.mconcat(b).to_list(), lst1+[1, 2, 3, 4, 5, 0])
+
     def test_find(self):
         lst = UnrolledLinkedList(5)
         self.assertEqual(lst.find(2), False)
@@ -102,6 +142,7 @@ class MyTestCase(unittest.TestCase):
         def is_even(n):
             return n % 2 == 0
         self.assertEqual(lst.filter(is_even).to_list(), [2, 4])
+        self.assertEqual(lst.filter(lambda x: x % 2 == 0).to_list(), [2, 4])
 
     @given(st.lists(st.integers()))
     def test_from_list_to_list_equality(self, a):

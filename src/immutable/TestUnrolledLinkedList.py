@@ -6,61 +6,88 @@ import hypothesis.strategies as st
 from immutable.UnrolledLinkedList import *
 
 
-class MyTestCase(unittest.TestCase):
+class TestUnrolledLinkedList(unittest.TestCase):
     def test_size(self):
         self.assertEqual(size(None), 0)
-        node = Node(5)
-        for i in range(0, 3):
-            node.elements[i] = i + 1
-            node.node_size += 1
-        self.assertEqual(size(node), 3)
+        self.assertEqual(size(cons(cons(cons(None, 1), 2), 3)), 3)
+        self.assertEqual(size(cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6)), 6)
 
     def test_getter(self):
         self.assertRaises(IndexError, lambda: getter(Node(5), 1))
         node = Node(5)
-        for i in range(0, 3):
-            node.elements[i] = i + 1
-            node.node_size += 1
+        cons(cons(cons(cons(cons(node, 1), 2), 3), 4), 5)
         self.assertEqual(getter(node, 1), 2)
 
     def test_setter(self):
         self.assertRaises(IndexError, lambda: setter(Node(5), 1, 2))
         node = Node(5)
-        for i in range(0, 3):
-            node.elements[i] = i + 1
-            node.node_size += 1
+        cons(cons(cons(node, 1), 3), 3)
         self.assertEqual(to_list(setter(node, 1, 3)), [1, 3, 3])
 
     def test_cons(self):
         self.assertEqual(cons(None, 1), cons(Node(3), 1))
         self.assertEqual(to_list(cons(cons(cons(None, 1), 2), 3)), [1, 2, 3])
         self.assertEqual(to_list(cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6)), [1, 2, 3, 4, 5, 6])
+        node = Node(5)
+        self.assertEqual(to_list(cons(cons(node, None), 1)), [None, 1])
+        x = cons(cons(cons(cons(cons(cons(None, 1), 2), 3), None), "123"), 6)
+        self.assertEqual(to_list(x), [1, 2, 3, None, "123", 6])
+
+    @given(st.lists(st.integers()))
+    def test_cons2(self, a):
+        node = Node(5)
+        for item in a:
+            cons(node, item)
+        self.assertEqual(to_list(node), a)
 
     def test_remove(self):
         self.assertRaises(IndexError, lambda: remove(cons(None, 1), 2))
         self.assertEqual(to_list(remove(cons(cons(cons(None, 1), 2), 3), 2)), [1, 2])
+        x = cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6)
+        x = remove(x, 3)
 
     def test_to_list(self):
         self.assertEqual(to_list(None), [])
         self.assertEqual(to_list(cons(cons(cons(None, 1), 2), 3)), [1, 2, 3])
 
+    @given(st.lists(st.integers()))
+    def test_to_list2(self, a):
+        node = Node(5)
+        for item in a:
+            cons(node, item)
+        self.assertEqual(to_list(node), a)
+
     def test_from_list(self):
         self.assertEqual(from_list([]), Node(5))
         node = Node(5)
-        for i in range(0, 3):
-            node.elements[i] = i + 1
-            node.node_size += 1
+        cons(cons(cons(node, 1), 2), 3)
         self.assertEqual(from_list([1, 2, 3]), node)
+
+    @given(st.lists(st.integers()))
+    def test_from_list2(self, a):
+        node = Node(5)
+        for item in a:
+            cons(node, item)
+        self.assertEqual(to_list(from_list(a)), to_list(node))
 
     def test_reverse(self):
         self.assertEqual(reverse(Node(5)), Node(5))
         self.assertEqual(reverse(cons(cons(cons(None, 1), 2), 3)), cons(cons(cons(None, 3), 2), 1))
+
+    @given(st.lists(st.integers()))
+    def test_reverse2(self, a):
+        x = from_list(a)
+        self.assertEqual(to_list(reverse(x)), a[::-1])
 
     def test_mconcat(self):
         self.assertEqual(mconcat(Node(5), None), Node(5))
         self.assertEqual(to_list(mconcat(cons(None, 1), cons(None, 2))), [1, 2])
         self.assertEqual(to_list(mconcat(cons(cons(cons(None, 1), 2), 3),
                                          cons(cons(cons(None, 4), 5), 6))), [1, 2, 3, 4, 5, 6])
+
+    @given(st.lists(st.integers()))
+    def test_monoid_identity(self, lst):
+        self.assertEqual(to_list(mconcat(mempty(), from_list(lst))), to_list(from_list(lst)))
 
     def test_map(self):
         self.assertEqual(to_list(map(Node(5), str)), [])
@@ -97,6 +124,8 @@ class MyTestCase(unittest.TestCase):
         def is_even(n):
             return n % 2 == 0
         self.assertEqual(filter(cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6), lambda x: is_even(x)),
+                         cons(cons(cons(None, 2), 4), 6))
+        self.assertEqual(filter(cons(cons(cons(cons(cons(cons(None, 1), 2), 3), 4), 5), 6), lambda x: x % 2 == 0),
                          cons(cons(cons(None, 2), 4), 6))
 
     @given(st.lists(st.integers()))
