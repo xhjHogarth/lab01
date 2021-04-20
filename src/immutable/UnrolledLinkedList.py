@@ -1,5 +1,12 @@
+import copy
+
+
 class Node:
     def __init__(self, capacity):
+        """
+        Initialization method
+        :param capacity: the max elements that each node can store
+        """
         self.node_size = 0
         self.capacity = capacity
         self.elements = [None] * capacity
@@ -19,6 +26,11 @@ class Node:
 
 
 def size(node):
+    """
+    Get the number of element in the UnrolledLinkedList.
+    :param node: The head node of the UnrolledLinkedList.
+    :return: The number of element in UnrolledLinkedList.
+    """
     if node is None:
         return 0
     else:
@@ -30,6 +42,13 @@ def size(node):
 
 
 def getter(node, index):
+    """
+    Get the elements in the UnrolledLinkedList according to the index.
+    :param node: The head node of the UnrolledLinkedList.
+    :param index: The index of the element in the UnrolledLinkedList.(0 <= index < size)
+    :return: If index is illegal, will through IndexError; otherwise,
+    will return the element which is in the UnrolledLinkedList。
+    """
     total_size = size(node)
     if 0 <= index < total_size:
         i = 0
@@ -44,6 +63,13 @@ def getter(node, index):
 
 
 def setter(node, index, value):
+    """
+    Update the element's value in the UnrolledLinkedList according to the index
+    :param node: The head node of the UnrolledLinkedList.
+    :param index: The index of the element in the UnrolledLinkedList.(0 <= index < size)
+    :param value: The value of the element replacement in the UnrolledLinkedList.
+    :return: If index is illegal, will through IndexError; otherwise, will return self.
+    """
     self = node
     total_size = size(node)
     if 0 <= index < total_size:
@@ -60,6 +86,14 @@ def setter(node, index, value):
 
 
 def cons(node, value):
+    """
+    Add an element into the UnrolledLinkedList.(element can be str,integer,None..).If the array is already full,
+    we first insert a new node either preceding or following the current one and move half of the elements in
+    the current node into it.
+    :param node: The head node of the UnrolledLinkedList.
+    :param value: The element add to UnrolledLinkedList.
+    :return: self
+    """
     if node is None:
         node = Node(5)
         node.elements[0] = value
@@ -89,6 +123,12 @@ def cons(node, value):
 
 
 def remove(node, index):
+    """
+    Remove element of the specific index in the UnrolledLinkedList.
+    :param node: The head node of the UnrolledLinkedList.
+    :param index: The index of the deleted element.
+    :return: If index is not exist, will raise IndexError; otherwise, we will remove element and return self
+    """
     self = node
     total_size = size(node)
     if 0 <= index < total_size:
@@ -119,6 +159,11 @@ def remove(node, index):
 
 
 def to_list(node):
+    """
+    Get all the elements in the UnrolledLinkedList and convert them to the linked list to return.
+    :param node: The head node of the UnrolledLinkedList.
+    :return: List which contains all the elements in the UnrolledLinkedList.
+    """
     res = []
     while node is not None:
         res += node.elements[0:node.node_size]
@@ -127,6 +172,14 @@ def to_list(node):
 
 
 def from_list(lst):
+    """
+    Convert list to UnrolledLinkedList. If present obj is not None and contains elements, obj will initialization,
+    and remove elements which already exists.
+    :param lst: The list which convert to UnrolledLinkedList.
+    :return: If param lst is not a instance of list, will raise TypeError; otherwise, will return self.
+    """
+    if not isinstance(lst, list):
+        raise TypeError
     node = Node(5)
     self = node
     for item in lst:
@@ -137,30 +190,54 @@ def from_list(lst):
 
 
 def reverse(node):
+    """
+    Reverse the elements in the linked list. Firstly, Convert UnrolledLinkedList to list, and reverse it; then,
+    convert list to UnrolledLinkedList.
+    :param node: The head node of the UnrolledLinkedList.
+    :return: self
+    """
     lst = to_list(node)
     list.reverse(lst)
     return from_list(lst)
 
 
 def mconcat(a, b):
+    """
+    Concatenate node a and node b.
+    :param a: node a
+    :param b: node b
+    :return: If param lst is not instance of UnrolledLinkedList,will raise TypeError; otherwise,
+    concatenate self and lst, and return self.
+    """
     if a is None:
         return b
     if b is None:
         return a
+    if a.next is None and a.node_size == 0:
+        return b
+    if b.next is None and b.node_size == 0:
+        return a
 
-    res = a
-    tail = a
-    while a is not None:
-        if a.next is None:
-            tail = a
-        a = a.next
-    while b is not None:
-        tail.next = b
-        b = b.next
+    c = copy.deepcopy(a)
+    d = copy.deepcopy(b)
+
+    res = c
+    tail = c
+    while c is not None:
+        if c.next is None:
+            tail = c
+        c = c.next
+    tail.next = d
     return res
 
 
 def map(node, f):
+    """
+    Perform a specific function on the elements in the UnrolledLinkedList.
+    :param node: The head node of the UnrolledLinkedList.
+    :param f: Specific function
+    :return: self(after execute specific function on the elements in the UnrolledLinkedList)
+    """
     self = node
     while node is not None:
         for i in range(0, node.node_size):
@@ -179,6 +256,12 @@ def reduce(node, f, initial_state):
 
 
 def find(node, value):
+    """
+    Find the specific element in UnrolledLinkedList which val is equal to param value.
+    :param node: The head node of the UnrolledLinkedList.
+    :param value: specific value
+    :return: True, if value is exist; False, if value is not exist.
+    """
     while node is not None:
         for i in range(0, node.node_size):
             if node.elements[i] == value:
@@ -188,6 +271,11 @@ def find(node, value):
 
 
 def iterator(node):
+    """
+    Iterator
+    :param node: The head node of the UnrolledLinkedList.
+    :return: iterator
+    """
     cur = node
     index = 0
 
@@ -207,6 +295,12 @@ def iterator(node):
 
 
 def filter(node, f):
+    """
+    Filter the data in the UnrolledLinkedList.
+    :param node: The head node of the UnrolledLinkedList.
+    :param f: specific function
+    :return: self
+    """
     lst = []
     try:
         get_next = iterator(node)

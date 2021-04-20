@@ -112,9 +112,9 @@ class TestUnrolledLinkedList(unittest.TestCase):
     def test_mconcat(self):
         lst1 = UnrolledLinkedList(5).add(1).add(2).add(3)
         lst2 = UnrolledLinkedList(5).add(4).add(5).add(6).add(7)
-        lst1.mconcat(lst2)
+        concat = lst1.mconcat(lst2)
         lst3 = UnrolledLinkedList(5).add(1).add(2).add(3).add(4).add(5).add(6).add(7)
-        self.assertEqual(lst1.to_list(), lst3.to_list())
+        self.assertEqual(concat.to_list(), lst3.to_list())
 
     @given(st.lists(st.integers()))
     def test_monoid_identity(self, lst1):
@@ -156,6 +156,20 @@ class TestUnrolledLinkedList(unittest.TestCase):
         lst = UnrolledLinkedList(5)
         lst.from_list(a)
         self.assertEqual(lst.size(), len(a))
+
+    @given(st.lists(st.integers()), st.lists(st.integers()), st.lists(st.integers()))
+    def test_immutability(self, a, b, c):
+        lst1 = UnrolledLinkedList(5).from_list(a)
+        lst2 = UnrolledLinkedList(5).from_list(b)
+        lst3 = UnrolledLinkedList(5).from_list(c)
+
+        concat_lst1_lst2_none = lst1.mconcat(lst2.mconcat(None)).to_list()
+        concat_lst1_none_lst2 = lst1.mconcat(None).mconcat(lst2).to_list()
+        self.assertEqual(concat_lst1_lst2_none, concat_lst1_none_lst2)
+
+        concat1 = lst1.mconcat(lst2.mconcat(lst3)).to_list()
+        concat2 = lst1.mconcat(lst2).mconcat(lst3).to_list()
+        self.assertEqual(concat1, concat2)
 
 
 if __name__ == '__main__':

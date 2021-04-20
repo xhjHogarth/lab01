@@ -132,11 +132,16 @@ class TestUnrolledLinkedList(unittest.TestCase):
     def test_from_list_to_list_equality(self, a):
         self.assertEqual(to_list(from_list(a)), a)
 
-    @given(st.lists(st.integers()))
-    def test_monoid_identity(self, lst):
-        a = from_list(lst)
+    @given(st.lists(st.integers()), st.lists(st.integers()), st.lists(st.integers()))
+    def test_monoid_identity(self, lst1, lst2, lst3):
+        a = from_list(lst1)
+        b = from_list(lst2)
+        c = from_list(lst3)
         self.assertEqual(mconcat(mempty(), a), a)
         self.assertEqual(mconcat(a, mempty()), a)
+        self.assertEqual(mconcat(mconcat(mempty(), a), b), mconcat(mempty(), mconcat(a, b)))
+
+        self.assertEqual(mconcat(mconcat(a, b), c), mconcat(a, mconcat(b, c)))
 
 
 if __name__ == '__main__':
