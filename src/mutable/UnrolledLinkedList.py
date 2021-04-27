@@ -1,8 +1,10 @@
 import copy
 
+from immutable import UnrolledLinkedList
+
 
 class Node:
-    def __init__(self, capacity):
+    def __init__(self, capacity: int):
         """
         Initialization method
         :param capacity: the max elements that each node can store
@@ -15,7 +17,7 @@ class Node:
 
 
 class UnrolledLinkedList:
-    def __init__(self, capacity):
+    def __init__(self, capacity: int):
         """
         Initialization method
         :param capacity: The max elements that each node can store
@@ -45,7 +47,7 @@ class UnrolledLinkedList:
             return value
         raise StopIteration
 
-    def get(self, index):
+    def get(self, index: int) -> Node:
         """
         Get the elements in the UnrolledLinkedList according to the index.
         :param index: The index of the element in the UnrolledLinkedList.(0 <= index < size)
@@ -64,7 +66,7 @@ class UnrolledLinkedList:
         else:
             raise IndexError
 
-    def set(self, index, value):
+    def set(self, index: int, value) -> UnrolledLinkedList:
         """
         Update the element's value in the UnrolledLinkedList according to the index
         :param index: The index of the element in the UnrolledLinkedList.(0 <= index < size)
@@ -84,14 +86,14 @@ class UnrolledLinkedList:
         else:
             raise IndexError
 
-    def size(self):
+    def size(self) -> int:
         """
         Get the number of element in the UnrolledLinkedList.
         :return: The number of element in UnrolledLinkedList.
         """
         return self.total_size
 
-    def add(self, element):
+    def add(self, element) -> UnrolledLinkedList:
         """
         Add an element into the UnrolledLinkedList.(element can be str,integer,None..).If the array is already full,
         we first insert a new node either preceding or following the current one and move half of the elements in
@@ -102,7 +104,7 @@ class UnrolledLinkedList:
         self._insert(self.tail, self.tail.node_size, element)
         return self
 
-    def to_list(self):
+    def to_list(self) -> list:
         """
         Get all the elements in the UnrolledLinkedList and convert them to the linked list to return.
         :return: List which contains all the elements in the UnrolledLinkedList.
@@ -115,7 +117,7 @@ class UnrolledLinkedList:
             node = node.next
         return res
 
-    def from_list(self, lst):
+    def from_list(self, lst: list) -> UnrolledLinkedList:
         """
         Convert list to UnrolledLinkedList. If present obj is not None and contains elements, obj will initialization,
         and remove elements which already exists.
@@ -139,7 +141,7 @@ class UnrolledLinkedList:
                 self.add(e)
         return self
 
-    def remove(self, value):
+    def remove(self, value) -> UnrolledLinkedList:
         """
         Remove the specific value in the UnrolledLinkedList.
         :param value: The value that we want to remove.
@@ -157,7 +159,7 @@ class UnrolledLinkedList:
             raise ValueError
         return self
 
-    def reverse(self):
+    def reverse(self) -> UnrolledLinkedList:
         """
         Reverse the elements in the linked list. Firstly, Convert UnrolledLinkedList to list, and reverse it; then,
         convert list to UnrolledLinkedList.
@@ -173,7 +175,7 @@ class UnrolledLinkedList:
         lst.reverse()
         return self.from_list(lst)
 
-    def mconcat(self, lst):
+    def mconcat(self, lst: UnrolledLinkedList) -> UnrolledLinkedList:
         """
         Concatenate self and lst.
         :param lst: which will concatenate with self
@@ -192,7 +194,7 @@ class UnrolledLinkedList:
             node = node.next
         return tmp
 
-    def map(self, f):
+    def map(self, f) -> UnrolledLinkedList:
         """
         Perform a specific function on the elements in the UnrolledLinkedList.
         :param f: Specific function
@@ -214,7 +216,7 @@ class UnrolledLinkedList:
             node = node.next
         return state
 
-    def find(self, value):
+    def find(self, value) -> bool:
         """
         Find the specific element in UnrolledLinkedList which val is equal to param value.
         :param value: specific value
@@ -222,7 +224,7 @@ class UnrolledLinkedList:
         """
         return value in self
 
-    def filter(self, f):
+    def filter(self, f) -> UnrolledLinkedList:
         """
         Filter the data in the UnrolledLinkedList.
         :param f: specific function

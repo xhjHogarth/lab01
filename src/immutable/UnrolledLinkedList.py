@@ -2,7 +2,7 @@ import copy
 
 
 class Node:
-    def __init__(self, capacity):
+    def __init__(self, capacity: int):
         """
         Initialization method
         :param capacity: the max elements that each node can store
@@ -25,7 +25,7 @@ class Node:
         return self.next == other.next
 
 
-def size(node):
+def size(node: Node) -> int:
     """
     Get the number of element in the UnrolledLinkedList.
     :param node: The head node of the UnrolledLinkedList.
@@ -41,7 +41,7 @@ def size(node):
         return res
 
 
-def getter(node, index):
+def getter(node: Node, index: int):
     """
     Get the elements in the UnrolledLinkedList according to the index.
     :param node: The head node of the UnrolledLinkedList.
@@ -62,7 +62,7 @@ def getter(node, index):
         raise IndexError
 
 
-def setter(node, index, value):
+def setter(node: Node, index: int, value) -> Node:
     """
     Update the element's value in the UnrolledLinkedList according to the index
     :param node: The head node of the UnrolledLinkedList.
@@ -85,7 +85,7 @@ def setter(node, index, value):
         raise IndexError
 
 
-def cons(node, value):
+def cons(node: Node, value) -> Node:
     """
     Add an element into the UnrolledLinkedList.(element can be str,integer,None..).If the array is already full,
     we first insert a new node either preceding or following the current one and move half of the elements in
@@ -122,7 +122,7 @@ def cons(node, value):
     return node
 
 
-def remove(node, index):
+def remove(node: Node, index: int) -> Node:
     """
     Remove element of the specific index in the UnrolledLinkedList.
     :param node: The head node of the UnrolledLinkedList.
@@ -158,7 +158,7 @@ def remove(node, index):
         raise IndexError
 
 
-def to_list(node):
+def to_list(node: Node) -> list:
     """
     Get all the elements in the UnrolledLinkedList and convert them to the linked list to return.
     :param node: The head node of the UnrolledLinkedList.
@@ -171,7 +171,7 @@ def to_list(node):
     return res
 
 
-def from_list(lst):
+def from_list(lst: list) -> Node:
     """
     Convert list to UnrolledLinkedList. If present obj is not None and contains elements, obj will initialization,
     and remove elements which already exists.
@@ -189,7 +189,7 @@ def from_list(lst):
     return self
 
 
-def reverse(node):
+def reverse(node: Node) -> Node:
     """
     Reverse the elements in the linked list. Firstly, Convert UnrolledLinkedList to list, and reverse it; then,
     convert list to UnrolledLinkedList.
@@ -201,7 +201,7 @@ def reverse(node):
     return from_list(lst)
 
 
-def mconcat(a, b):
+def mconcat(a: Node, b: Node) -> Node:
     """
     Concatenate node a and node b.
     :param a: node a
@@ -231,7 +231,7 @@ def mconcat(a, b):
     return res
 
 
-def map(node, f):
+def map(node: Node, f) -> Node:
     """
     Perform a specific function on the elements in the UnrolledLinkedList.
     :param node: The head node of the UnrolledLinkedList.
@@ -246,7 +246,7 @@ def map(node, f):
     return self
 
 
-def reduce(node, f, initial_state):
+def reduce(node: Node, f, initial_state) -> Node:
     state = initial_state
     while node is not None:
         for i in range(0, node.node_size):
@@ -255,7 +255,7 @@ def reduce(node, f, initial_state):
     return state
 
 
-def find(node, value):
+def find(node: Node, value) -> bool:
     """
     Find the specific element in UnrolledLinkedList which val is equal to param value.
     :param node: The head node of the UnrolledLinkedList.
@@ -270,7 +270,7 @@ def find(node, value):
     return False
 
 
-def iterator(node):
+def iterator(node: Node):
     """
     Iterator
     :param node: The head node of the UnrolledLinkedList.
@@ -294,7 +294,7 @@ def iterator(node):
     return foo
 
 
-def filter(node, f):
+def filter(node: Node, f):
     """
     Filter the data in the UnrolledLinkedList.
     :param node: The head node of the UnrolledLinkedList.
